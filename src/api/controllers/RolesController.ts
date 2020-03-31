@@ -1,4 +1,5 @@
-import { IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsEmail, IsNotEmpty, IsUUID, ValidateNested } from 'class-validator';
 import {
     Authorized, Body, Delete, Get, JsonController, OnUndefined, Param, Post, Put, Req
 } from 'routing-controllers';
@@ -7,11 +8,26 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { UserNotFoundError } from '../errors/UserNotFoundError';
 import { User } from '../models/User';
 import { UserService } from '../services/UserService';
-import {UserResponse} from './responses/UserResponse';
-import {UserRegisterRequest} from './requests/UserRegisterRequest';
+import { PetResponse } from './PetController';
+
+
+export class UserResponse extends BaseUser {
+    @IsUUID()
+    public id: string;
+
+    @ValidateNested({ each: true })
+    @Type(() => PetResponse)
+    public pets: PetResponse[];
+}
+
+class CreateUserBody extends BaseUser {
+    @IsNotEmpty()
+    public password: string;
+}
+
 @Authorized()
 @JsonController('/users')
-@OpenAPI({ security: [{ basicAuth: [] }], description: 'user api to control from basic api of login / register to get profile and more' })
+@OpenAPI({ security: [{ basicAuth: [] }] })
 export class UserController {
 
     constructor(
@@ -19,33 +35,27 @@ export class UserController {
     ) { }
 
     @Get()
-    @ResponseSchema(UserResponse, { isArray: true , description: 'will get all user in system' })
+    @ResponseSchema(UserResponse, { isArray: true })
     public find(): Promise<User[]> {
-        // @todo need get user under role of members
         return this.userService.find();
     }
 
-    @Get('/profile')
-    @ResponseSchema(UserResponse, { isArray: true , description: 'get current logged user profile' })
+    @Get('/me')
+    @ResponseSchema(UserResponse, { isArray: true })
     public findMe(@Req() req: any): Promise<User[]> {
         return req.user;
     }
 
     @Get('/:id')
     @OnUndefined(UserNotFoundError)
-    @ResponseSchema(UserResponse , {
-        description: 'will get the full info of a user by given id',
-    })
+    @ResponseSchema(UserResponse)
     public one(@Param('id') id: string): Promise<User | undefined> {
         return this.userService.findOne(id);
     }
 
     @Post()
-    @ResponseSchema(UserResponse, {
-        description: 'register new user',
-
-    })
-    public create(@Body() body: UserRegisterRequest): Promise<User> {
+    @ResponseSchema(UserResponse)
+    public create(@Body() body: CreateUserBody): Promise<User> {
         const user = new User();
         user.email = body.email;
         user.firstName = body.firstName;
@@ -57,10 +67,8 @@ export class UserController {
     }
 
     @Put('/:id')
-    @ResponseSchema(UserResponse, {
-        description: 'update existing user',
-    })
-    public update(@Param('id') id: string, @Body() body: UserRegisterRequest): Promise<User> {
+    @ResponseSchema(UserResponse)
+    public update(@Param('id') id: string, @Body() body: BaseUser): Promise<User> {
         const user = new User();
         user.email = body.email;
         user.firstName = body.firstName;
@@ -71,10 +79,6 @@ export class UserController {
     }
 
     @Delete('/:id')
-    // tslint:disable-next-line:no-null-keyword
-    @ResponseSchema(null, {
-        description: 'delete if existed user',
-    })
     public delete(@Param('id') id: string): Promise<void> {
         return this.userService.delete(id);
     }

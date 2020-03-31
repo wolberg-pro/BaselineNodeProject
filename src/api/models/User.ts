@@ -1,9 +1,10 @@
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
-import { BeforeInsert, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-
-import { Pet } from './Pet';
+import {BeforeInsert, Column, Entity, JoinTable, ManyToMany, PrimaryColumn} from 'typeorm';
+import {date_transformer} from '../Utils/TypeormModelHelper';
+import {Permission} from './Permission';
+import {Role} from './Role';
 
 @Entity()
 export class User {
@@ -27,7 +28,7 @@ export class User {
         });
     }
 
-    @PrimaryColumn('uuid')
+    @PrimaryColumn('id')
     public id: string;
 
     @IsNotEmpty()
@@ -40,10 +41,6 @@ export class User {
 
     @IsNotEmpty()
     @Column()
-    public email: string;
-
-    @IsNotEmpty()
-    @Column()
     @Exclude()
     public password: string;
 
@@ -51,8 +48,24 @@ export class User {
     @Column()
     public username: string;
 
-    @OneToMany(type => Pet, pet => pet.user)
-    public pets: Pet[];
+    @IsNotEmpty()
+    @Column()
+    public email: string;
+
+    @IsNotEmpty()
+    @Column()
+    public phone: string;
+
+    @Column({ name: 'phone_validation_at', type: 'timestamp', transformer: date_transformer})
+    public phoneValidationAt: Date;
+
+    @JoinTable({name: 'users_has_permissions'} )
+    @ManyToMany(type => Permission, permissions => permissions.users)
+    public permissions: Permission[];
+
+    @JoinTable({name: 'users_has_roles'})
+    @ManyToMany(type => Role  , roles => roles.users)
+    public roles: Role[];
 
     public toString(): string {
         return `${this.firstName} ${this.lastName} (${this.email})`;
