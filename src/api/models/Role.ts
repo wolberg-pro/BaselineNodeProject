@@ -1,5 +1,3 @@
-import * as bcrypt from 'bcrypt';
-import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 import {Column, Entity, IsNull, JoinTable, ManyToMany, Not, PrimaryColumn} from 'typeorm';
 
@@ -19,7 +17,7 @@ export class Role extends  BaseModelCreationUpdateTimes {
         },
     };
     @PrimaryColumn('id')
-    public id: string;
+    public id: number;
 
     @IsNotEmpty()
     @Column({ name: 'name' })

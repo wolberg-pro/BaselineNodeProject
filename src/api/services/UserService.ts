@@ -1,12 +1,11 @@
 import { Service } from 'typedi';
 import { OrmRepository } from 'typeorm-typedi-extensions';
-import uuid from 'uuid';
-
 import { EventDispatcher, EventDispatcherInterface } from '../../decorators/EventDispatcher';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { User } from '../models/User';
 import { UserRepository } from '../repositories/UserRepository';
 import { events } from '../subscribers/events';
+import {UserResponse} from '../controllers/responses/UserResponse';
 
 @Service()
 export class UserService {
@@ -22,27 +21,42 @@ export class UserService {
         return this.userRepository.find({ relations: ['pets'] });
     }
 
-    public findOne(id: string): Promise<User | undefined> {
+    public findOne(id: number): Promise<User | undefined> {
         this.log.info('Find one user');
         return this.userRepository.findOne({ id });
     }
 
-    public async create(user: User): Promise<User> {
+    public async create(userResponse: UserResponse): Promise<User> {
+        const user = new User();
+        user.firstName = userResponse.lastName;
+        user.lastName = userResponse.lastName;
+        user.email = userResponse.email;
+        user.username = userResponse.username;
+        user.phone = userResponse.phone;
+        user.password = userResponse.password;
         this.log.info('Create a new user => ', user.toString());
-        user.id = uuid.v1();
+
         const newUser = await this.userRepository.save(user);
         this.eventDispatcher.dispatch(events.user.created, newUser);
         return newUser;
     }
 
-    public update(id: string, user: User): Promise<User> {
+    public async update(id: number, userResponse: UserResponse): Promise<User| null> {
         this.log.info('Update a user');
-        user.id = id;
+        const user = await this.findOne(id);
+        if (user) {
+            user.username = userResponse.username;
+            user.firstName = userResponse.firstName;
+            user.lastName = userResponse.lastName;
+            this.eventDispatcher.dispatch(events.user.updated, user);
+        }
+
         return this.userRepository.save(user);
     }
 
     public async delete(id: string): Promise<void> {
         this.log.info('Delete a user');
+        this.eventDispatcher.dispatch(events.user.deleted, id);
         await this.userRepository.delete(id);
         return;
     }

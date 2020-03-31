@@ -1,7 +1,5 @@
-import * as bcrypt from 'bcrypt';
-import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
-import {BeforeInsert, BeforeUpdate, Column, Entity, IsNull, JoinTable, ManyToMany, Not, PrimaryColumn} from 'typeorm';
+import { Column, Entity, IsNull, JoinTable, ManyToMany, Not, PrimaryColumn} from 'typeorm';
 import {date_transformer} from '../Utils/TypeormModelHelper';
 import {BaseModelCreationUpdateTimes} from './BaseModelCreationUpdateTimes';
 import {User} from './User';
@@ -18,7 +16,7 @@ export class Permission extends  BaseModelCreationUpdateTimes {
         },
     };
     @PrimaryColumn('id')
-    public id: string;
+    public id: number;
 
     @IsNotEmpty()
     @Column({ name: 'name' })

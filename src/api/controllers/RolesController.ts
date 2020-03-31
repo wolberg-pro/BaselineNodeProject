@@ -1,5 +1,3 @@
-import { Type } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsUUID, ValidateNested } from 'class-validator';
 import {
     Authorized, Body, Delete, Get, JsonController, OnUndefined, Param, Post, Put, Req
 } from 'routing-controllers';
@@ -8,22 +6,6 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { UserNotFoundError } from '../errors/UserNotFoundError';
 import { User } from '../models/User';
 import { UserService } from '../services/UserService';
-import { PetResponse } from './PetController';
-
-
-export class UserResponse extends BaseUser {
-    @IsUUID()
-    public id: string;
-
-    @ValidateNested({ each: true })
-    @Type(() => PetResponse)
-    public pets: PetResponse[];
-}
-
-class CreateUserBody extends BaseUser {
-    @IsNotEmpty()
-    public password: string;
-}
 
 @Authorized()
 @JsonController('/users')

@@ -6,8 +6,17 @@
 export const events = {
     user: {
         created: 'onUserCreate',
+        updated: 'onUserUpdate',
+        deleted: 'onUserDelete',
     },
-    pet: {
-        created: 'onPetCreate',
+    role: {
+        created: 'onRoleCreate',
+        updated: 'onRoleUpdate',
+        deleted: 'onRoleDelete',
+    },
+    permission: {
+        created: 'onPermissionCreate',
+        updated: 'onPermissionUpdate',
+        deleted: 'onPermissionDelete',
     },
 };

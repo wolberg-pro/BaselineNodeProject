@@ -13,5 +13,13 @@ export class UserEventSubscriber {
     public onUserCreate(user: User): void {
         log.info('User ' + user.toString() + ' created!');
     }
+    @On(events.user.updated)
+    public onUserUpdate(user: User): void {
+        log.info('User ' + user.toString() + ' updated!');
+    }
+    @On(events.user.deleted)
+    public onUserDelete(entity_id: number): void {
+        log.info(`User ${entity_id} deleted!`);
+    }
 
 }

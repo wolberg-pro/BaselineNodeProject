@@ -1,7 +1,7 @@
 import {IsEmail, IsNotEmpty} from 'class-validator';
 import {BaseResponseEntity} from './common/BaseResponseEntity';
 
-export class UserResponse extends BaseResponseEntityEntity {
+export class UserResponse extends BaseResponseEntity {
     @IsNotEmpty()
     public firstName: string;
 
@@ -17,4 +17,6 @@ export class UserResponse extends BaseResponseEntityEntity {
 
     @IsNotEmpty()
     public phone: string;
+
+    public password?: string;
 }
