@@ -19,21 +19,21 @@ export class RoleService {
     ) { }
 
     public find(show_deleted: boolean): Promise<Role[]> {
-        this.log.info('Find all Roles');
+        this.log.info('Roles: Find all Roles');
         return (show_deleted) ? this.roleRepository.createQueryBuilder().withDeleted().getMany() : this.roleRepository.createQueryBuilder().getMany();
     }
 
     public findOne(id: number): Promise<Role | undefined> {
-        this.log.info('Find one role');
+        this.log.info('Roles: Find one role');
         return this.roleRepository.findOne({ id });
     }
     public findOneBySlug(slug: string): Promise<Role | undefined> {
-        this.log.info('Find one role');
+        this.log.info('Roles: Find one role');
         return this.roleRepository.findOne({ slug });
     }
 
     /**
-     *
+     * will create role
      * @param roleResponse
      */
     public async create(roleResponse: RoleOrPermissionResponse): Promise<Role> {
@@ -52,6 +52,24 @@ export class RoleService {
         }
     }
 
+    public async userHasRole(user_id: number , role_id: string|number): Promise<boolean> {
+        this.log.info('Roles: user has role');
+        const query =  this.roleRepository.createQueryBuilder();
+        if (typeof (role_id) === 'string') {
+            query
+                .leftJoinAndSelect('roles.users', 'user')
+                .where('roles.slug = :role_id' , {role_id})
+                .andWhere('user.id = :user_id', { user_id});
+        } else {
+            query
+                .leftJoinAndSelect('roles.users', 'user')
+                .where('roles.id = :role_id' , {role_id})
+                .andWhere('user.id = :user_id', { user_id});
+        }
+        const result = query.getOne();
+        return !!result;
+    }
+
     /**
      * will update existing role but only name and description slug in read onlu
      * @param id
@@ -60,7 +78,7 @@ export class RoleService {
      * @throws EntityNotFoundError
      */
     public async update(id: string|number, roleResponse: RoleOrPermissionResponse): Promise<Role> {
-        this.log.info('Update a role');
+        this.log.info('Roles: Update a role');
         const role = (typeof (id) === 'string') ?  await this.findOneBySlug(id) :   await this.findOne(id);
         if (role) {
             role.name = roleResponse.name;
@@ -77,7 +95,7 @@ export class RoleService {
      * @throws EntityNotFoundError
      */
     public async delete(id: string|number): Promise<void> {
-        this.log.info('Delete a role');
+        this.log.info('Roles: Delete a role');
         const role = (typeof (id) === 'string') ?  await this.findOneBySlug(id) :   await this.findOne(id);
         if (role) {
             this.eventDispatcher.dispatch(events.role.deleted, id);
