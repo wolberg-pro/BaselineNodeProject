@@ -11,10 +11,10 @@ export class RoleRepository extends Repository<Role>  {
      * @param roles array of strings
      * @return User[]
      */
-    public findByUsersByRole(roles: string[]) {
+    public findByUsersByRole(roles: string[]): Promise<any> {
         return this.createQueryBuilder()
             .where(`role.slug IN (${roles.map(slug => `'${slug}'`).join(', ')})`)
-            .leftJoinAndSelect('role.users', 'user')
+            .leftJoinAndSelect('roles.users', 'user')
             .getMany();
     }
 
@@ -23,11 +23,11 @@ export class RoleRepository extends Repository<Role>  {
      * @param roles array of strings
      * @return User[]
      */
-    public findByUsersByPermission(roles: string[]) {
+    public findByUsersByPermission(roles: string[]): Promise<any> {
         return this.createQueryBuilder()
             .select('permission')
-            .where(`role.slug IN (${roles.map(slug => `'${slug}'`).join(', ')})`)
-            .leftJoinAndSelect('role.permission', 'permission')
+            .where(`roles.slug IN (${roles.map(slug => `'${slug}'`).join(', ')})`)
+            .leftJoinAndSelect('roles.permissions', 'permission')
             .getMany();
     }
 }

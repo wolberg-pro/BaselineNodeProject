@@ -1,8 +1,6 @@
 import {MigrationInterface, QueryRunner, Table} from 'typeorm';
 
-export class userHasPermissions1585744066326 implements MigrationInterface {
-
-
+export class UserHasPermissions1585744066326 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<any> {
         const table = new Table({
             name: 'user_has_permission',

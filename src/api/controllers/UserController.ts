@@ -35,7 +35,7 @@ export class UserController {
     @ResponseSchema(UserResponse , {
         description: 'will get the full info of a user by given id',
     })
-    public one(@Param('id') id: string): Promise<User | undefined> {
+    public one(@Param('id') id: number): Promise<User | undefined> {
         return this.userService.findOne(id);
     }
 
@@ -45,28 +45,16 @@ export class UserController {
 
     })
     public create(@Body() body: UserRegisterRequest): Promise<User> {
-        const user = new User();
-        user.email = body.email;
-        user.firstName = body.firstName;
-        user.lastName = body.lastName;
-        user.password = body.password;
-        user.username = body.username;
 
-        return this.userService.create(user);
+        return this.userService.create(body);
     }
 
     @Put('/:id')
     @ResponseSchema(UserResponse, {
         description: 'update existing user',
     })
-    public update(@Param('id') id: string, @Body() body: UserRegisterRequest): Promise<User> {
-        const user = new User();
-        user.email = body.email;
-        user.firstName = body.firstName;
-        user.lastName = body.lastName;
-        user.username = body.username;
-
-        return this.userService.update(id, user);
+    public update(@Param('id') id: number, @Body() body: UserRegisterRequest): Promise<User> {
+        return this.userService.update(id, body);
     }
 
     @Delete('/:id')

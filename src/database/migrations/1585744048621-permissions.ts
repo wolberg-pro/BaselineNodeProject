@@ -1,8 +1,6 @@
 import {MigrationInterface, QueryRunner, Table} from 'typeorm';
 
-export class permissions1585744048621 implements MigrationInterface {
-
-
+export class Permissions1585744048621 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<any> {
         const table = new Table({
             name: 'permissions',
@@ -26,7 +24,7 @@ export class permissions1585744048621 implements MigrationInterface {
                     type: 'text',
                     isNullable: true,
                 }, {
-                    name: 'active_at',
+                    name: 'deleted_at',
                     type: 'timestamp',
                     isNullable: true,
                 }, {
@@ -46,5 +44,4 @@ export class permissions1585744048621 implements MigrationInterface {
     public async down(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.dropTable('permissions');
     }
-
 }

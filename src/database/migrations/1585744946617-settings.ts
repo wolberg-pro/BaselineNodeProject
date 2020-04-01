@@ -1,6 +1,6 @@
 import {MigrationInterface, QueryRunner, Table} from 'typeorm';
 
-export class settings1585744946617 implements MigrationInterface {
+export class Settings1585744946617 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         const table = new Table({

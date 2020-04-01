@@ -1,6 +1,6 @@
 import {MigrationInterface, QueryRunner, Table} from 'typeorm';
 
-export class roles1585744043064 implements MigrationInterface {
+export class Roles1585744043064 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         const table = new Table({
@@ -25,7 +25,7 @@ export class roles1585744043064 implements MigrationInterface {
                     type: 'text',
                     isNullable: true,
                 }, {
-                    name: 'active_at',
+                    name: 'deleted_at',
                     type: 'timestamp',
                     isNullable: true,
                 }, {

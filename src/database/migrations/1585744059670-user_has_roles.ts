@@ -1,8 +1,6 @@
 import {MigrationInterface, QueryRunner, Table} from 'typeorm';
 
-export class userHasRoles1585744059670 implements MigrationInterface {
-
-
+export class UserHasRoles1585744059670 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<any> {
         const table = new Table({
             name: 'user_has_role',

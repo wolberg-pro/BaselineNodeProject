@@ -1,68 +1,32 @@
 import {
-    Authorized, Body, Delete, Get, JsonController, OnUndefined, Param, Post, Put, Req
+    Authorized, Get, JsonController, Param, QueryParams
 } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
-
-import { UserNotFoundError } from '../errors/UserNotFoundError';
-import { User } from '../models/User';
-import { UserService } from '../services/UserService';
-
+import {GetUsersQuery} from './requests/query/DeletedQuery';
+import {Role} from '../models/Role';
+import {RoleService} from '../services/RoleService';
 @Authorized()
-@JsonController('/users')
+@JsonController('/roles')
 @OpenAPI({ security: [{ basicAuth: [] }] })
 export class UserController {
 
     constructor(
-        private userService: UserService
+        private roleService: RoleService
     ) { }
 
-    @Get()
-    @ResponseSchema(UserResponse, { isArray: true })
-    public find(): Promise<User[]> {
-        return this.userService.find();
+    @Get('/')
+    @ResponseSchema(Role, {  description: 'get all roles' , isArray: true })
+    public index(@QueryParams() query: GetUsersQuery): Promise<Role[]> {
+        return this.roleService.find(query.show_deleted);
     }
-
-    @Get('/me')
-    @ResponseSchema(UserResponse, { isArray: true })
-    public findMe(@Req() req: any): Promise<User[]> {
-        return req.user;
+    @Get('/find/id/:id')
+    @ResponseSchema(Role, {  description: 'look up for role by ID' })
+    public findById(@Param('id') id: number): Promise<Role> {
+        return this.roleService.findOne(id);
     }
-
-    @Get('/:id')
-    @OnUndefined(UserNotFoundError)
-    @ResponseSchema(UserResponse)
-    public one(@Param('id') id: string): Promise<User | undefined> {
-        return this.userService.findOne(id);
+    @Get('/find/slug/:slug')
+    @ResponseSchema(Role, { description: 'look up for role by slug' })
+    public findBySlug(@Param('slug') slug: string): Promise<Role> {
+        return this.roleService.findOneBySlug(slug);
     }
-
-    @Post()
-    @ResponseSchema(UserResponse)
-    public create(@Body() body: CreateUserBody): Promise<User> {
-        const user = new User();
-        user.email = body.email;
-        user.firstName = body.firstName;
-        user.lastName = body.lastName;
-        user.password = body.password;
-        user.username = body.username;
-
-        return this.userService.create(user);
-    }
-
-    @Put('/:id')
-    @ResponseSchema(UserResponse)
-    public update(@Param('id') id: string, @Body() body: BaseUser): Promise<User> {
-        const user = new User();
-        user.email = body.email;
-        user.firstName = body.firstName;
-        user.lastName = body.lastName;
-        user.username = body.username;
-
-        return this.userService.update(id, user);
-    }
-
-    @Delete('/:id')
-    public delete(@Param('id') id: string): Promise<void> {
-        return this.userService.delete(id);
-    }
-
 }

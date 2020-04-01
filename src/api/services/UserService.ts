@@ -5,7 +5,8 @@ import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { User } from '../models/User';
 import { UserRepository } from '../repositories/UserRepository';
 import { events } from '../subscribers/events';
-import {UserResponse} from '../controllers/responses/UserResponse';
+import {EntityFoundError} from '../errors/EntityFoundError';
+import {UserRegisterRequest} from '../controllers/requests/UserRegisterRequest';
 
 @Service()
 export class UserService {
@@ -25,23 +26,31 @@ export class UserService {
         this.log.info('Find one user');
         return this.userRepository.findOne({ id });
     }
-
-    public async create(userResponse: UserResponse): Promise<User> {
-        const user = new User();
-        user.firstName = userResponse.lastName;
-        user.lastName = userResponse.lastName;
-        user.email = userResponse.email;
-        user.username = userResponse.username;
-        user.phone = userResponse.phone;
-        user.password = userResponse.password;
-        this.log.info('Create a new user => ', user.toString());
-
-        const newUser = await this.userRepository.save(user);
-        this.eventDispatcher.dispatch(events.user.created, newUser);
-        return newUser;
+    public findOneByEmail(email: string): Promise<User | undefined> {
+        this.log.info('Find one user');
+        return this.userRepository.findOne({ email });
     }
 
-    public async update(id: number, userResponse: UserResponse): Promise<User| null> {
+    public async create(userResponse: UserRegisterRequest): Promise<User> {
+        if (!this.findOneByEmail(userResponse.email)) {
+            const user = new User();
+            user.firstName = userResponse.lastName;
+            user.lastName = userResponse.lastName;
+            user.email = userResponse.email;
+            user.username = userResponse.username;
+            user.phone = userResponse.phone;
+            user.password = userResponse.password;
+            this.log.info('Create a new user => ', user.toString());
+
+            const newUser = await this.userRepository.save(user);
+            this.eventDispatcher.dispatch(events.user.created, newUser);
+            return newUser;
+        } else {
+            throw new EntityFoundError(userResponse.email);
+        }
+    }
+
+    public async update(id: number, userResponse: UserRegisterRequest): Promise<User| null> {
         this.log.info('Update a user');
         const user = await this.findOne(id);
         if (user) {

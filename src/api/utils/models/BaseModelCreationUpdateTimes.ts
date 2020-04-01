@@ -1,5 +1,5 @@
-import {BeforeInsert, BeforeUpdate, Column} from "typeorm";
-import {date_transformer} from "../TypeormModelHelper";
+import {BeforeInsert, BeforeUpdate, Column} from 'typeorm';
+import {date_transformer} from '../TypeormModelHelper';
 
 export abstract class BaseModelCreationUpdateTimes {
 

@@ -1,8 +1,7 @@
 import {MigrationInterface, QueryRunner, Table} from 'typeorm';
 
 // tslint:disable-next-line:class-name
-export class roleHasPermissions1585744073085 implements MigrationInterface {
-
+export class RoleHasPermissions1585744073085 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<any> {
         const table = new Table({
             name: 'role_has_permission',

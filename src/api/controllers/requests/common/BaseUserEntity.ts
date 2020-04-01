@@ -13,4 +13,6 @@ export class BaseUserEntity {
 
     @IsNotEmpty()
     public username: string;
+    @IsNotEmpty()
+    public phone: string;
 }

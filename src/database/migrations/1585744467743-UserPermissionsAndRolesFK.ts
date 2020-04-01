@@ -1,8 +1,6 @@
 import {MigrationInterface, QueryRunner, TableForeignKey} from 'typeorm';
 
 export class UserPermissionsAndRolesFK1585744467743 implements MigrationInterface {
-
-
     private tableRolesUserForeignKey = new TableForeignKey({
         name: 'fk_user_role_user_id',
         columnNames: ['user_id'],
@@ -32,8 +30,6 @@ export class UserPermissionsAndRolesFK1585744467743 implements MigrationInterfac
         referencedTableName: 'permissions',
         onDelete: 'CASCADE',
     });
-
-
     private tableRolesToPermissionRoleIdForeignKey = new TableForeignKey({
         name: 'fk_role_permission_role_id',
         columnNames: ['role_id'],
@@ -66,6 +62,4 @@ export class UserPermissionsAndRolesFK1585744467743 implements MigrationInterfac
         await queryRunner.dropForeignKey('role_has_permission', this.tableRolesToPermissionRoleIdForeignKey);
         await queryRunner.dropForeignKey('role_has_permission', this.tableRolesToPermissionPermissionIdForeignKey);
     }
-
-
 }
