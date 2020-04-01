@@ -1,7 +1,7 @@
 import { IsNotEmpty } from 'class-validator';
 import { Column, Entity, IsNull, JoinTable, ManyToMany, Not, PrimaryColumn} from 'typeorm';
-import {date_transformer} from '../Utils/TypeormModelHelper';
-import {BaseModelCreationUpdateTimes} from './BaseModelCreationUpdateTimes';
+import {date_transformer} from '../utils/TypeormModelHelper';
+import {BaseModelCreationUpdateTimes} from '../utils/models/BaseModelCreationUpdateTimes';
 import {User} from './User';
 import {Role} from './Role';
 
@@ -15,7 +15,7 @@ export class Permission extends  BaseModelCreationUpdateTimes {
             deletedAt: Not(IsNull()),
         },
     };
-    @PrimaryColumn('id')
+    @PrimaryColumn({name: 'id'})
     public id: number;
 
     @IsNotEmpty()

@@ -38,8 +38,8 @@ const run = async () => {
   let factoryFiles;
   let seedFiles;
   try {
-    factoryFiles = await loadEntityFactories(factoryPath);
-    seedFiles = await loadSeeds(seedsPath);
+    // factoryFiles = await loadEntityFactories(factoryPath);
+    // seedFiles = await loadSeeds(seedsPath);
   } catch (error) {
     return handleError(error);
   }
@@ -51,31 +51,31 @@ const run = async () => {
 
   // Status logging to print out the amount of factories and seeds.
   log(chalk.bold('seeds'));
-  log('🔎 ', chalk.gray.underline(`found:`),
-    chalk.blue.bold(`${factoryFiles.length} factories`, chalk.gray('&'), chalk.blue.bold(`${seedFiles.length} seeds`)));
+  // log('🔎 ', chalk.gray.underline(`found:`),
+  //   chalk.blue.bold(`${factoryFiles.length} factories`, chalk.gray('&'), chalk.blue.bold(`${seedFiles.length} seeds`)));
 
   // Get database connection and pass it to the seeder
   try {
-    const connection = await loadConnection();
-    setConnection(connection);
+    // const connection = await loadConnection();
+    // setConnection(connection);
   } catch (error) {
     return handleError(error);
   }
 
   // Show seeds in the console
-  for (const seedFile of seedFiles) {
-    try {
-      let className = seedFile.split('/')[seedFile.split('/').length - 1];
-      className = className.replace('.ts', '').replace('.js', '');
-      className = className.split('-')[className.split('-').length - 1];
-      log('\n' + chalk.gray.underline(`executing seed:  `), chalk.green.bold(`${className}`));
-      const seedFileObject: any = require(seedFile);
-      await runSeed(seedFileObject[className]);
-    } catch (error) {
-      console.error('Could not run seed ', error);
-      process.exit(1);
-    }
-  }
+  // for (const seedFile of seedFiles) {
+  //   try {
+  //     let className = seedFile.split('/')[seedFile.split('/').length - 1];
+  //     className = className.replace('.ts', '').replace('.js', '');
+  //     className = className.split('-')[className.split('-').length - 1];
+  //     log('\n' + chalk.gray.underline(`executing seed:  `), chalk.green.bold(`${className}`));
+  //     const seedFileObject: any = require(seedFile);
+  //     await runSeed(seedFileObject[className]);
+  //   } catch (error) {
+  //     console.error('Could not run seed ', error);
+  //     process.exit(1);
+  //   }
+  // }
 
   log('\n👍 ', chalk.gray.underline(`finished seeding`));
   process.exit(0);

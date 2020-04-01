@@ -3,7 +3,7 @@ import {SettingContextJsonParseError} from '../errors/SettingContextJsonParseErr
 
 @Entity({name: 'settings'})
 export class Settings {
-    @PrimaryColumn('key')
+    @PrimaryColumn({name:'key'})
     public key: string;
 
     @Column({ name: 'description' })

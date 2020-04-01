@@ -12,6 +12,7 @@ export class permissions1585744048621 implements MigrationInterface {
                     type: 'int',
                     length: '10',
                     isPrimary: true,
+                    generationStrategy: 'increment',
                 }, {
                     name: 'slug',
                     type: 'varchar',

@@ -9,8 +9,8 @@ export class userHasRoles1585744059670 implements MigrationInterface {
             columns: [
                 {
                     name: 'user_id',
-                    type: 'bigint',
-                    length: '20',
+                    type: 'int',
+                    length: '10',
                     isPrimary: true,
                 }, {
                     name: 'role_id',

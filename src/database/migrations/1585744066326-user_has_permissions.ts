@@ -9,8 +9,8 @@ export class userHasPermissions1585744066326 implements MigrationInterface {
             columns: [
                 {
                     name: 'user_id',
-                    type: 'bigint',
-                    length: '20',
+                    type: 'int',
+                    length: '10',
                     isPrimary: true,
                 }, {
                     name: 'permission_id',

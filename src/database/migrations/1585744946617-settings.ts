@@ -23,16 +23,16 @@ export class settings1585744946617 implements MigrationInterface {
                     name: 'context',
                     type: 'text',
                     isNullable: true,
-                }
+                },
             ],
         });
         await queryRunner.createTable(table);
-        await queryRunner.query('INSERT INTO `settings` (`key`, `description`, `contextJSON`, `context`, `created_at`, `updated_at`) VALUES\n' +
-            '(\'per_page_default\', \'defualt per page will effect when not match to per_page_options\', NULL, \'20\', \'2020-03-16 07:29:46\', \'2020-03-16 07:29:46\'),\n' +
-            '(\'per_page_options\', \'how many items can user select per page\', \'[20, 50, 100, 200]\', NULL, \'2020-03-16 07:29:45\', \'2020-03-16 07:29:45\'),\n' +
-            '(\'limit_deal_packs\', \'how many packs a deal can have (globaly)\', NULL, \'5\', NULL, NULL),\n' +
-            '(\'limit_deal_extra\', \'how many extra a deal can have (globaly)\', NULL, \'5\', NULL, NULL),\n' +
-            '(\'default_currency_id\', \'will auto select currency (or use that currency if selection not found) \', NULL, \'1\', NULL, NULL)');
+        await queryRunner.query('INSERT INTO `settings` (`key`, `description`, `contextJSON`, `context`) VALUES\n' +
+            '(\'per_page_default\', \'defualt per page will effect when not match to per_page_options\', NULL, \'20\'),\n' +
+            '(\'per_page_options\', \'how many items can user select per page\', \'[20, 50, 100, 200]\', NULL),\n' +
+            '(\'limit_deal_packs\', \'how many packs a deal can have (globaly)\', NULL, \'5\'),\n' +
+            '(\'limit_deal_extra\', \'how many extra a deal can have (globaly)\', NULL, \'5\'),\n' +
+            '(\'default_currency_id\', \'will auto select currency (or use that currency if selection not found) \', NULL, \'1\')');
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {

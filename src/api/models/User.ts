@@ -2,7 +2,7 @@ import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 import {BeforeInsert, Column, Entity, JoinTable, ManyToMany, PrimaryColumn} from 'typeorm';
-import {date_transformer} from '../Utils/TypeormModelHelper';
+import {date_transformer} from '../utils/TypeormModelHelper';
 import {Permission} from './Permission';
 import {Role} from './Role';
 
@@ -28,8 +28,8 @@ export class User {
         });
     }
 
-    @PrimaryColumn('id')
-    public id: string;
+    @PrimaryColumn({name: 'id'})
+    public id: number;
 
     @IsNotEmpty()
     @Column({ name: 'first_name' })
