@@ -1,14 +1,11 @@
 import { Service } from 'typedi';
 import { OrmRepository } from 'typeorm-typedi-extensions';
-import uuid from 'uuid';
-
 import { EventDispatcher, EventDispatcherInterface } from '../../decorators/EventDispatcher';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
-import { User } from '../models/User';
-import { UserRepository } from '../repositories/UserRepository';
 import { events } from '../subscribers/events';
 import {Role} from '../models/Role';
 import {RoleRepository} from '../repositories/RoleRepository';
+import {RoleOrPermissionResponse} from '../controllers/responses/RoleOrPermissionResponse';
 
 @Service()
 export class UserService {
@@ -29,14 +26,14 @@ export class UserService {
         return this.roleRepository.findOne({ id });
     }
 
-    public async create(role: Role): Promise<Role> {
+    public async create(role: RoleOrPermissionResponse): Promise<Role> {
         this.log.info('Create a new role => ', role.toString());
         const newRole = await this.roleRepository.save(role);
         this.eventDispatcher.dispatch(events.role.created, newRole);
         return newRole;
     }
 
-    public update(id: number, role: UserResponse): Promise<Role> {
+    public update(id: number, role: RoleOrPermissionResponse): Promise<Role> {
         this.log.info('Update a role');
         role.id = id;
         return this.roleRepository.save(role);

@@ -27,16 +27,16 @@ export class CreateBruce implements Seed {
         // return bruce;
 
         // const connection = await factory.getConnection();
-        const em = connection.createEntityManager();
-
-        const user = new User();
-        user.id = uuid.v1();
-        user.firstName = 'Bruce';
-        user.lastName = 'Wayne';
-        user.email = 'bruce.wayne@wayne-enterprises.com';
-        user.username = 'bruce';
-        user.password = '1234';
-        return await em.save(user);
+        // const em = connection.createEntityManager();
+        //
+        // const user = new User();
+        // user.id = uuid.v1();
+        // user.firstName = 'Bruce';
+        // user.lastName = 'Wayne';
+        // user.email = 'bruce.wayne@wayne-enterprises.com';
+        // user.username = 'bruce';
+        // user.password = '1234';
+        // return await em.save(user);
     }
 
 }
