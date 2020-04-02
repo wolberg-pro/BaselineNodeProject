@@ -25,8 +25,10 @@ export class AuthController {
     @ResponseSchema(UserResponse, {
         description: 'register new user',
     })
-    public create(@Body() body: UserRegisterRequest): Promise<Users> {
-        return this.userService.create(body);
+    public async  create(@Body() body: UserRegisterRequest): Promise<Users> {
+        const user =  await this.userService.create(body);
+        user.access_token =  jwt.sign({ id: user.id }, env.app.secretOrKey );
+        return user;
     }
 
     @Post('/login')

@@ -32,7 +32,8 @@ export class UserService {
     }
 
     public async create(userResponse: UserRegisterRequest): Promise<Users> {
-        if (!this.findOneByEmail(userResponse.email)) {
+        const user = await this.findOneByEmail(userResponse.email);
+        if (!user) {
             const user = new Users();
             user.firstName = userResponse.lastName;
             user.lastName = userResponse.lastName;
