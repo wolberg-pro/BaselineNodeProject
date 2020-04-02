@@ -2,19 +2,25 @@ import {
     Authorized, Body, Delete, Get, JsonController, OnUndefined, Param, Post, Put, Req
 } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
-
+import jwt from 'jsonwebtoken';
 import { UserNotFoundError } from '../errors/UserNotFoundError';
 import { User } from '../models/User';
 import { UserService } from '../services/UserService';
 import {UserResponse} from './responses/UserResponse';
 import {UserRegisterRequest} from './requests/UserRegisterRequest';
+import {UserLoginRequest} from './requests/UserLoginRequest';
+import {AuthService} from '../../auth/AuthService';
+import {UserLoginError} from '../errors/UserLoginError';
+import {env} from '../../env';
+
 @Authorized()
 @JsonController('/users')
 @OpenAPI({ security: [{ basicAuth: [] }], description: 'user api to control from basic api of login / register to get profile and more' })
 export class UserController {
 
     constructor(
-        private userService: UserService
+        private userService: UserService,
+        private authService: AuthService
     ) { }
 
     @Get()
@@ -43,12 +49,28 @@ export class UserController {
 
     @Post()
     @ResponseSchema(UserResponse, {
-        description: 'register new user',
+        description: 'login',
 
     })
     public create(@Body() body: UserRegisterRequest): Promise<User> {
 
         return this.userService.create(body);
+    }
+
+    @Post()
+    @ResponseSchema(UserResponse, {
+        description: 'register new user',
+
+    })
+    public async login(@Body() body: UserLoginRequest): Promise<User> {
+        const user =  await this.userService.findOneByEmail(body.email);
+        if (user) {
+            if (await this.authService.validateUser(body.email, body.password) === undefined) {
+                throw new UserLoginError();
+            }
+        }
+        user.access_token =  jwt.sign({ id: user.id }, env.app.secretOrKey );
+        return user;
     }
 
     @Put('/:id')

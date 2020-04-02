@@ -71,4 +71,9 @@ export class UserResponse extends BaseResponseEntity {
     })
     @IsOptional()
     public password?: string;
+    @JSONSchema({
+        description: 'access_token',
+    })
+    @IsOptional()
+    public access_token?: string;
 }

@@ -28,6 +28,8 @@ export class User {
         });
     }
 
+    public access_token?: string;
+    
     @PrimaryGeneratedColumn({name: 'id'})
     public id: number;
 

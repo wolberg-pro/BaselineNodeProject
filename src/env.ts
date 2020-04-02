@@ -20,6 +20,7 @@ export const env = {
     isTest: process.env.NODE_ENV === 'test',
     isDevelopment: process.env.NODE_ENV === 'development',
     app: {
+        secretOrKey: getOsEnv('APP_JWT_Secret'),
         name: getOsEnv('APP_NAME'),
         version: (pkg as any).version,
         description: (pkg as any).description,
