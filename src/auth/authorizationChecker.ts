@@ -16,7 +16,10 @@ export function authorizationChecker(connection: Connection): (action: Action, p
         // checker must return either boolean (true or false)
         // either promise that resolves a boolean value
         log.info('validate permission access');
-
-        return await authService.validateUserPermission(action.request.user.id , permissions);
+        if (action.request.user) {
+            // we check only we have valid user login into the system
+            return await authService.validateUserPermission(action.request.user.id, permissions);
+        }
+        return true; // this will say i can do what ever i need without the checks so need keep this in main
     };
 }

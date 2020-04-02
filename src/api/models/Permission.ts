@@ -2,7 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 import {Column, Entity, IsNull, JoinTable, ManyToMany, Not, PrimaryGeneratedColumn} from 'typeorm';
 import {date_transformer} from '../utils/TypeormModelHelper';
 import {BaseModelCreationUpdateTimes} from '../utils/models/BaseModelCreationUpdateTimes';
-import {User} from './User';
+import {Users} from './Users';
 import {Role} from './Role';
 
 @Entity({name: 'permissions'})
@@ -33,8 +33,8 @@ export class Permission extends  BaseModelCreationUpdateTimes {
     public deletedAt: Date;
 
     @JoinTable({name: 'users_has_permissions'} )
-    @ManyToMany(type => User, users => users.permissions)
-    public users: User[];
+    @ManyToMany(type => Users, users => users.permissions)
+    public users: Users[];
 
     @JoinTable({name: 'roles_has_permissions'})
     @ManyToMany(type => Role , roles => roles.permissions)

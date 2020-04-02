@@ -1,17 +1,14 @@
 import * as nock from 'nock';
 import request from 'supertest';
-import { runSeed } from 'typeorm-seeding';
-
-import { User } from '../../../src/api/models/User';
-import { CreateBruce } from '../../../src/database/seeds/CreateBruce';
 import { closeDatabase } from '../../utils/database';
 import { BootstrapSettings } from '../utils/bootstrap';
 import { prepareServer } from '../utils/server';
+import {CreateUser} from '../../../src/database/factories/UserFactory';
 
 describe('/api/users', () => {
 
-    let bruce: User;
-    let bruceAuthorization: string;
+    let userData;
+    // let bruceAuthorization: string;
     let settings: BootstrapSettings;
 
     // -------------------------------------------------------------------------
@@ -20,8 +17,9 @@ describe('/api/users', () => {
 
     beforeAll(async () => {
         settings = await prepareServer({ migrate: true });
-        bruce = await runSeed<User>(CreateBruce);
-        bruceAuthorization = Buffer.from(`${bruce.username}:1234`).toString('base64');
+        userData = await CreateUser(1);
+        // bruce = await runSeed<User>(CreateBruce);
+        // bruceAuthorization = Buffer.from(`${bruce.username}:1234`).toString('base64');
     });
 
     // -------------------------------------------------------------------------
@@ -33,6 +31,26 @@ describe('/api/users', () => {
         await closeDatabase(settings.connection);
     });
 
+    // -------------------------------------------------------------------------
+    // create user test
+    // -------------------------------------------------------------------------
+    test('POST: / should create user with token', async (done) => {
+        const postData = {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            email: userData.email,
+            username: userData.username,
+            password: '1234',
+        };
+        const response = await request(settings.app)
+            .post('/api/users')
+            .send(postData)
+            .expect('Content-Type', /json/)
+            .expect(200);
+
+        expect(response.body.length).toBe(1);
+        done();
+    });
     // -------------------------------------------------------------------------
     // Test cases
     // -------------------------------------------------------------------------

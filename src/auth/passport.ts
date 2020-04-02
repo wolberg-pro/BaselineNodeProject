@@ -12,7 +12,7 @@ export function passportLoader(expressApp: Application, connection: Connection):
     expressApp.use(passport.initialize());
     expressApp.use(passport.session());
     const authService = Container.get<AuthService>(AuthService);
-    passport.use('login',new LocalStrategy({
+    passport.use('login', new LocalStrategy({
             usernameField: 'email',
             passwordField: 'password',
         }, (email, password, cb) => {

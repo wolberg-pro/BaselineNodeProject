@@ -4,7 +4,7 @@ import {Column, Entity, IsNull, JoinTable, ManyToMany, Not, PrimaryGeneratedColu
 import {BaseModelCreationUpdateTimes} from '../utils/models/BaseModelCreationUpdateTimes';
 import {date_transformer} from '../utils/TypeormModelHelper';
 import {Permission} from './Permission';
-import {User} from './User';
+import {Users} from './Users';
 
 @Entity()
 export class Role extends  BaseModelCreationUpdateTimes {
@@ -38,8 +38,8 @@ export class Role extends  BaseModelCreationUpdateTimes {
     public permissions: Permission[];
 
     @JoinTable({name: 'users_has_roles'})
-    @ManyToMany(type => User , users => users.roles )
-    public users: User[];
+    @ManyToMany(type => Users , users => users.roles )
+    public users: Users[];
 
     public toString(): string {
         return `${this.name} - ${this.slug}`;

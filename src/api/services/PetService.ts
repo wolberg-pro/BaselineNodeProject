@@ -5,7 +5,7 @@ import uuid from 'uuid';
 import { EventDispatcher, EventDispatcherInterface } from '../../decorators/EventDispatcher';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { Pet } from '../models/Pet';
-import { User } from '../models/User';
+import { Users } from '../models/Users';
 import { PetRepository } from '../repositories/PetRepository';
 import { events } from '../subscribers/events';
 
@@ -23,7 +23,7 @@ export class PetService {
         return this.petRepository.find();
     }
 
-    public findByUser(user: User): Promise<Pet[]> {
+    public findByUser(user: Users): Promise<Pet[]> {
         this.log.info('Find all pets of the user', user.toString());
         return this.petRepository.find({
             where: {

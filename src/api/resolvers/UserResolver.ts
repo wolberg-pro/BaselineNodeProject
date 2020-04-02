@@ -1,7 +1,7 @@
 import { FieldResolver, Query, Resolver, Root } from 'type-graphql';
 import { Service } from 'typedi';
 
-import { User as UserModel } from '../models/User';
+import { Users as UserModel } from '../models/Users';
 import { PetService } from '../services/PetService';
 import { UserService } from '../services/UserService';
 import { User } from '../types/User';

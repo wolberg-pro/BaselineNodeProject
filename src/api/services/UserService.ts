@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import { OrmRepository } from 'typeorm-typedi-extensions';
 import { EventDispatcher, EventDispatcherInterface } from '../../decorators/EventDispatcher';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
-import { User } from '../models/User';
+import { Users } from '../models/Users';
 import { UserRepository } from '../repositories/UserRepository';
 import { events } from '../subscribers/events';
 import {EntityFoundError} from '../errors/EntityFoundError';
@@ -17,23 +17,23 @@ export class UserService {
         @Logger(__filename) private log: LoggerInterface
     ) { }
 
-    public find(): Promise<User[]> {
+    public find(): Promise<Users[]> {
         this.log.info('Find all users');
         return this.userRepository.find({ relations: ['pets'] });
     }
 
-    public findOne(id: number): Promise<User | undefined> {
+    public findOne(id: number): Promise<Users | undefined> {
         this.log.info('Find one user');
         return this.userRepository.findOne({ id });
     }
-    public findOneByEmail(email: string): Promise<User | undefined> {
+    public findOneByEmail(email: string): Promise<Users | undefined> {
         this.log.info('Find one user');
         return this.userRepository.findOne({ email });
     }
 
-    public async create(userResponse: UserRegisterRequest): Promise<User> {
+    public async create(userResponse: UserRegisterRequest): Promise<Users> {
         if (!this.findOneByEmail(userResponse.email)) {
-            const user = new User();
+            const user = new Users();
             user.firstName = userResponse.lastName;
             user.lastName = userResponse.lastName;
             user.email = userResponse.email;
@@ -50,7 +50,7 @@ export class UserService {
         }
     }
 
-    public async update(id: number, userResponse: UserRegisterRequest): Promise<User| null> {
+    public async update(id: number, userResponse: UserRegisterRequest): Promise<Users| null> {
         this.log.info('Update a user');
         const user = await this.findOne(id);
         if (user) {

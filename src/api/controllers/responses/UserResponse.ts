@@ -1,12 +1,18 @@
-import {IsEmail, IsNotEmpty, IsOptional, MaxLength, MinLength} from 'class-validator';
+import {IsEmail, IsEnum, IsNotEmpty, IsOptional, MaxLength, MinLength} from 'class-validator';
 import {BaseResponseEntity} from './common/BaseResponseEntity';
 import {JSONSchema} from 'class-validator-jsonschema';
+
+const enum genderEnum {
+    male = 'male',
+    female = 'female',
+}
 @JSONSchema({
     description: 'A User object',
     example: {
         id: '123',
         firstName: 'user first name',
         lastName: 'user last name',
+        gender: 'male',
         phone: '0541234565',
         email: 'user@email.com',
     },
@@ -54,7 +60,11 @@ export class UserResponse extends BaseResponseEntity {
         message: 'username is too long',
     })
     public username: string;
-
+    @JSONSchema({
+        description: 'user gender',
+    })
+    @IsEnum(['male' , 'female'])
+    public gender: genderEnum;
     @JSONSchema({
         description: 'user phone',
     })
@@ -65,7 +75,7 @@ export class UserResponse extends BaseResponseEntity {
     @MaxLength(15, {
         message: 'phone is too long',
     })
-    public phone: string;
+    public phone?: string;
     @JSONSchema({
         description: 'user password required when create user and he is not used via app when user via app (socal) the password it is his user social id',
     })

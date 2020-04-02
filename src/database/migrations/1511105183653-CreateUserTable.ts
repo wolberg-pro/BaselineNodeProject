@@ -37,7 +37,7 @@ export class CreateUserTable1511105183653 implements MigrationInterface {
                     name: 'phone',
                     type: 'varchar',
                     length: '30',
-                    isNullable: false,
+                    isNullable: true,
                 }, {
                     name: 'gender',
                     type: 'enum',

@@ -3,6 +3,7 @@
     "execMap": {
         "ts": "node -r ts-node/register"
     },
+
     "events": {
         "start": "tslint -c ./tslint.json -t stylish 'src/**/*.ts'"
     }

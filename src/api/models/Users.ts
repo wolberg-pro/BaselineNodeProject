@@ -6,8 +6,10 @@ import {date_transformer} from '../utils/TypeormModelHelper';
 import {Permission} from './Permission';
 import {Role} from './Role';
 
-@Entity()
-export class User {
+@Entity({
+    schema: 'users',
+})
+export class Users {
 
     public static hashPassword(password: string): Promise<string> {
         return new Promise((resolve, reject) => {
@@ -20,7 +22,7 @@ export class User {
         });
     }
 
-    public static comparePassword(user: User, password: string): Promise<boolean> {
+    public static comparePassword(user: Users, password: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
             bcrypt.compare(password, user.password, (err, res) => {
                 resolve(res === true);
@@ -29,7 +31,7 @@ export class User {
     }
 
     public access_token?: string;
-    
+
     @PrimaryGeneratedColumn({name: 'id'})
     public id: number;
 
@@ -54,11 +56,11 @@ export class User {
     @Column()
     public email: string;
 
-    @IsNotEmpty()
     @Column()
     public phone: string;
 
     @Column({ name: 'phone_validation_at', type: 'timestamp', transformer: date_transformer})
+    @Exclude()
     public phoneValidationAt: Date;
 
     @JoinTable({name: 'users_has_permissions'} )
@@ -75,7 +77,7 @@ export class User {
 
     @BeforeInsert()
     public async hashPassword(): Promise<void> {
-        this.password = await User.hashPassword(this.password);
+        this.password = await Users.hashPassword(this.password);
     }
 
 }

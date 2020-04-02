@@ -6,7 +6,7 @@ import { DLoader } from '../../decorators/DLoader';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { Context } from '../Context';
 import { Pet as PetModel } from '../models/Pet';
-import { User as UserModel } from '../models/User';
+import { Users as UserModel } from '../models/Users';
 import { PetService } from '../services/PetService';
 import { PetInput } from '../types/input/PetInput';
 import { Pet } from '../types/Pet';

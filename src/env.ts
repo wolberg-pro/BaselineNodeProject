@@ -9,8 +9,15 @@ import {
 /**
  * Load .env file or for tests the .env.test file.
  */
-dotenv.config({ path: path.join(process.cwd(), `.env${((process.env.NODE_ENV === 'test') ? '.test' : '')}`) });
+dotenv.config({path: path.join(process.cwd(), `.env${((process.env.NODE_ENV === 'test') ? '.test' : '')}`)});
 
+const parseBoolean = (val: string | boolean | number): boolean => {
+    const s = val && val.toString().toLowerCase().trim();
+    if (s === 'true' || s === '1') {
+        return true;
+    }
+    return false;
+};
 /**
  * Environment variables
  */
@@ -30,6 +37,7 @@ export const env = {
         port: normalizePort(process.env.PORT || getOsEnv('APP_PORT')),
         banner: toBool(getOsEnv('APP_BANNER')),
         dirs: {
+            logDir: getOsEnv('LOG_Dir'),
             migrations: getOsPaths('TYPEORM_MIGRATIONS'),
             migrationsDir: getOsPath('TYPEORM_MIGRATIONS_DIR'),
             entities: getOsPaths('TYPEORM_ENTITIES'),
@@ -42,6 +50,11 @@ export const env = {
         },
     },
     log: {
+        rotate: {
+            maxFiles: getOsEnv('Log_Max_Files'),
+            maxSize: getOsEnv('Log_Max_Size'),
+            ziped: parseBoolean(getOsEnv('Log_Zipped')),
+        },
         level: getOsEnv('LOG_LEVEL'),
         json: toBool(getOsEnvOptional('LOG_JSON')),
         output: getOsEnv('LOG_OUTPUT'),

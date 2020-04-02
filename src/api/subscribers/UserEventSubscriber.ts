@@ -1,7 +1,7 @@
 import { EventSubscriber, On } from 'event-dispatch';
 
 import { Logger } from '../../lib/logger';
-import { User } from '../models/User';
+import { Users } from '../models/Users';
 import { events } from './events';
 
 const log = new Logger(__filename);
@@ -10,11 +10,11 @@ const log = new Logger(__filename);
 export class UserEventSubscriber {
 
     @On(events.user.created)
-    public onUserCreate(user: User): void {
+    public onUserCreate(user: Users): void {
         log.info('User ' + user.toString() + ' created!');
     }
     @On(events.user.updated)
-    public onUserUpdate(user: User): void {
+    public onUserUpdate(user: Users): void {
         log.info('User ' + user.toString() + ' updated!');
     }
     @On(events.user.deleted)

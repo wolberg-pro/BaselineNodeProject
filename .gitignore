@@ -4,6 +4,7 @@
 /logs
 *.log
 *.log*
+.*-audit.json
 
 # Node files #
 node_modules/

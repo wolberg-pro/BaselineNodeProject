@@ -1,4 +1,4 @@
-import { User } from '../../../src/api/models/User';
+import { Users } from '../../../src/api/models/Users';
 import { UserService } from '../../../src/api/services/UserService';
 import { events } from '../../../src/api/subscribers/events';
 import { EventDispatcherMock } from '../lib/EventDispatcherMock';
@@ -11,7 +11,7 @@ describe('UserService', () => {
         const log = new LogMock();
         const repo = new RepositoryMock();
         const ed = new EventDispatcherMock();
-        const user = new User();
+        const user = new Users();
         user.id = '1';
         user.firstName = 'John';
         user.lastName = 'Doe';
@@ -27,7 +27,7 @@ describe('UserService', () => {
         const log = new LogMock();
         const repo = new RepositoryMock();
         const ed = new EventDispatcherMock();
-        const user = new User();
+        const user = new Users();
         user.id = '1';
         user.firstName = 'John';
         user.lastName = 'Doe';
