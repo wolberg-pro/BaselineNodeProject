@@ -50,7 +50,7 @@ export class AuthService {
     public async validateUserPermission(user_id: number , permissionSlug: string[]): Promise<boolean> {
         if (permissionSlug.length === 0) {  return true; }
         const permissions = await this.permissionRepository.findByUsersByPermission(user_id , permissionSlug);
-        if (permissions  && permission.length !== 0) { return true; }
+        if (permissions  && permissions.length !== 0) { return true; }
         return false;
     }
 

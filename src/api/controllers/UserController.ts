@@ -1,5 +1,5 @@
 import {
-    Authorized, Body, CurrentUser, Delete, Get, JsonController, OnUndefined, Param, Post, Put, Req
+    Authorized, Body, Delete, Get, JsonController, OnUndefined, Param, Post, Put, Req
 } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
@@ -27,8 +27,8 @@ export class UserController {
     @Get('/profile')
     @Authorized()
     @ResponseSchema(UserResponse, { isArray: true , description: 'get current logged user profile' })
-    public findMe(@CurrentUser({ required: true }) user: User): Promise<User[]> {
-        return user;
+    public findMe(@Req() req: any): Promise<User> {
+        return req.user;
     }
 
     @Get('/:id')
