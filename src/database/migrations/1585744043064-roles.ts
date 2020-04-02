@@ -11,6 +11,7 @@ export class Roles1585744043064 implements MigrationInterface {
                     type: 'int',
                     length: '10',
                     isPrimary: true,
+                    isGenerated: true,
                     generationStrategy: 'increment',
                 }, {
                     name: 'slug',

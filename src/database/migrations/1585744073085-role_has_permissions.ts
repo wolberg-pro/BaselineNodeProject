@@ -17,10 +17,6 @@ export class RoleHasPermissions1585744073085 implements MigrationInterface {
                     length: '10',
                     isPrimary: true,
                 }, {
-                    name: 'active_at',
-                    type: 'timestamp',
-                    isNullable: true,
-                }, {
                     name: 'updated_at',
                     type: 'timestamp',
                     default: 'CURRENT_TIMESTAMP',

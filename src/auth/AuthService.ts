@@ -5,13 +5,15 @@ import { OrmRepository } from 'typeorm-typedi-extensions';
 import { User } from '../api/models/User';
 import { UserRepository } from '../api/repositories/UserRepository';
 import { Logger, LoggerInterface } from '../decorators/Logger';
+import {PermissionRepository} from '../api/repositories/PermissionRepository';
 
 @Service()
 export class AuthService {
 
     constructor(
         @Logger(__filename) private log: LoggerInterface,
-        @OrmRepository() private userRepository: UserRepository
+        @OrmRepository() private userRepository: UserRepository,
+        @OrmRepository() private permissionRepository: PermissionRepository
     ) { }
 
     public parseBasicAuthFromRequest(req: express.Request): { username: string, password: string } {
@@ -43,6 +45,13 @@ export class AuthService {
         }
 
         return undefined;
+    }
+
+    public async validateUserPermission(user_id: number , permissionSlug: string[]): Promise<boolean> {
+        if (permissionSlug.length === 0) {  return true; }
+        const permissions = await this.permissionRepository.findByUsersByPermission(user_id , permissionSlug);
+        if (permissions  && permission.length !== 0) { return true; }
+        return false;
     }
 
 }

@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
-import {BeforeInsert, Column, Entity, JoinTable, ManyToMany, PrimaryColumn} from 'typeorm';
+import {BeforeInsert, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn} from 'typeorm';
 import {date_transformer} from '../utils/TypeormModelHelper';
 import {Permission} from './Permission';
 import {Role} from './Role';
@@ -28,7 +28,7 @@ export class User {
         });
     }
 
-    @PrimaryColumn({name: 'id'})
+    @PrimaryGeneratedColumn({name: 'id'})
     public id: number;
 
     @IsNotEmpty()

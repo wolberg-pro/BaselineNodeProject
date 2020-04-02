@@ -1,5 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
-import {Column, Entity, IsNull, JoinTable, ManyToMany, Not, PrimaryColumn} from 'typeorm';
+import {Column, Entity, IsNull, JoinTable, ManyToMany, Not, PrimaryGeneratedColumn} from 'typeorm';
 
 import {BaseModelCreationUpdateTimes} from '../utils/models/BaseModelCreationUpdateTimes';
 import {date_transformer} from '../utils/TypeormModelHelper';
@@ -16,7 +16,7 @@ export class Role extends  BaseModelCreationUpdateTimes {
             deletedAt: Not(IsNull()),
         },
     };
-    @PrimaryColumn({name: 'id'})
+    @PrimaryGeneratedColumn({name: 'id'})
     public id: number;
 
     @IsNotEmpty()

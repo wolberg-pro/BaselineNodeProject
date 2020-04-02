@@ -11,6 +11,7 @@ export class CreateUserTable1511105183653 implements MigrationInterface {
                     type: 'int',
                     length: '10',
                     isPrimary: true,
+                    isGenerated: true,
                     generationStrategy: 'increment',
                 }, {
                     name: 'first_name',

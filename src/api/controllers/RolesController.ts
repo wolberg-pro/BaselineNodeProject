@@ -19,32 +19,38 @@ export class RolesController {
     ) { }
 
     @Get('/')
+    @Authorized('admin_app')
     @ResponseSchema(RoleOrPermissionResponse, {  description: 'get all roles' , isArray: true })
     public index(@QueryParams() query: GetUsersQuery): Promise<Role[]> {
         return this.roleService.find(query.show_deleted);
     }
     @Get('/find/id/:id')
+    @Authorized('admin_app')
     @ResponseSchema(RoleOrPermissionResponse, {  description: 'look up for role by ID' })
     public findById(@Param('id') id: number): Promise<Role> {
         return this.roleService.findOne(id);
     }
     @Get('/find/slug/:slug')
+    @Authorized('admin_app')
     @ResponseSchema(RoleOrPermissionResponse, { description: 'look up for role by slug' })
     public findBySlug(@Param('slug') slug: string): Promise<Role> {
         return this.roleService.findOneBySlug(slug);
     }
 
     @Put('/id/:id')
+    @Authorized('admin_app')
     @ResponseSchema(RoleOrPermissionResponse, {  description: 'update role by ID' })
     public updateById(@Param('id') id: number, @Body() body: RoleOrPermissionResponse): Promise<Role> {
         return this.updateRole(id, body);
     }
     @Put('/slug/:slug')
+    @Authorized('admin_app')
     @ResponseSchema(RoleOrPermissionResponse, { description: 'update role by slug' })
     public updateBySlug(@Param('slug') slug: string, @Body() body: RoleOrPermissionResponse): Promise<Role> {
         return this.updateRole(slug, body);
     }
     @Get('/:user_id/:slug')
+    @Authorized()
     @ResponseSchema(BooleanResponse, { description: 'verify if user has role' })
     public async userHasRole(@Param('user_id') user_id: number, @Param('slug') slug: string): Promise<BooleanResponse> {
         const role = await this.roleService.findOneBySlug(slug);

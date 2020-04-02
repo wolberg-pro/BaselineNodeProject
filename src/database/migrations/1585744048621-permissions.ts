@@ -10,6 +10,7 @@ export class Permissions1585744048621 implements MigrationInterface {
                     type: 'int',
                     length: '10',
                     isPrimary: true,
+                    isGenerated: true,
                     generationStrategy: 'increment',
                 }, {
                     name: 'slug',
