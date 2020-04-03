@@ -1,13 +1,14 @@
 import { Service } from 'typedi';
 import { OrmRepository } from 'typeorm-typedi-extensions';
-import { EventDispatcher, EventDispatcherInterface } from '../../decorators/EventDispatcher';
-import { Logger, LoggerInterface } from '../../decorators/Logger';
+import { EventDispatcher, EventDispatcherInterface } from '@src/decorators/EventDispatcher';
+import { Logger, LoggerInterface } from '@src/decorators/Logger';
 import { events } from '../subscribers/events';
 import {Role} from '../models/Role';
 import {RoleRepository} from '../repositories/RoleRepository';
 import {RoleOrPermissionResponse} from '../controllers/responses/RoleOrPermissionResponse';
 import {EntityNotFoundError} from '../errors/EntityNotFoundError';
 import {EntityFoundError} from '../errors/EntityFoundError';
+import {PermissionService} from '@api/services/PermissionService';
 
 @Service()
 export class RoleService {
@@ -15,7 +16,8 @@ export class RoleService {
     constructor(
         @OrmRepository() private roleRepository: RoleRepository,
         @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
-        @Logger(__filename) private log: LoggerInterface
+        @Logger(__filename) private log: LoggerInterface,
+        @Service() private permissionService: PermissionService
     ) { }
 
     public find(show_deleted: boolean): Promise<Role[]> {
@@ -34,24 +36,29 @@ export class RoleService {
 
     /**
      * will create role
-     * @param roleResponse
+     * @param entityResponse
      */
-    public async create(roleResponse: RoleOrPermissionResponse): Promise<Role> {
-        let role = await this.findOneBySlug(roleResponse.slug);
-        if (role) {
-            throw new EntityFoundError(roleResponse.slug);
+    public async create(entityResponse: RoleOrPermissionResponse): Promise<Role> {
+        let entity = await this.findOneBySlug(entityResponse.slug);
+        if (entity) {
+            throw new EntityFoundError(entityResponse.slug);
         } else {
-            role = new Role();
-            role.slug = roleResponse.slug;
-            role.name = roleResponse.name;
-            role.description = roleResponse.description;
-            const newRole = await this.roleRepository.save(role);
-            this.log.info('Create a new role => ', newRole.toString());
-            this.eventDispatcher.dispatch(events.role.created, newRole);
-            return newRole;
+            entity = new Role();
+            entity.slug = entityResponse.slug;
+            entity.name = entityResponse.name;
+            entity.description = entityResponse.description;
+            const newEntity = await this.roleRepository.save(entity);
+            this.log.info('Roles: Create a new entity => ', newEntity.toString());
+            this.eventDispatcher.dispatch(events.role.created, newEntity);
+            return newEntity;
         }
     }
 
+    /**
+     * will verifiyed if user has role
+     * @param user_id
+     * @param role_id
+     */
     public async userHasRole(user_id: number , role_id: string|number): Promise<boolean> {
         this.log.info('Roles: user has role');
         const query =  this.roleRepository.createQueryBuilder();
@@ -79,14 +86,15 @@ export class RoleService {
      */
     public async update(id: string|number, roleResponse: RoleOrPermissionResponse): Promise<Role> {
         this.log.info('Roles: Update a role');
-        const role = (typeof (id) === 'string') ?  await this.findOneBySlug(id) :   await this.findOne(id);
-        if (role) {
-            role.name = roleResponse.name;
-            role.description = roleResponse.description;
+        const entity = (typeof (id) === 'string') ?  await this.findOneBySlug(id) :   await this.findOne(id);
+        if (entity) {
+            entity.name = roleResponse.name;
+            entity.description = roleResponse.description;
         } else {
             throw new EntityNotFoundError(id);
         }
-        return this.roleRepository.save(role);
+        this.eventDispatcher.dispatch(events.role.updated, entity);
+        return this.roleRepository.save(entity);
     }
 
     /**
@@ -96,8 +104,8 @@ export class RoleService {
      */
     public async delete(id: string|number): Promise<void> {
         this.log.info('Roles: Delete a role');
-        const role = (typeof (id) === 'string') ?  await this.findOneBySlug(id) :   await this.findOne(id);
-        if (role) {
+        const entity = (typeof (id) === 'string') ?  await this.findOneBySlug(id) :   await this.findOne(id);
+        if (entity) {
             this.eventDispatcher.dispatch(events.role.deleted, id);
             await this.roleRepository.delete(id);
         } else {
@@ -106,4 +114,44 @@ export class RoleService {
         return;
     }
 
+    public async roleHasPermissionOrUsersBound(id: string): Promise<boolean> {
+        this.log.info('Roles: user or permission has role');
+        const entity = (typeof (id) === 'string') ?  await this.findOneBySlug(id) :   await this.findOne(id);
+        if (entity) {
+            const users = await this.roleRepository.findByUsersByRole([id]);
+            const permissions = await this.roleRepository.findByPermissionByRole([id]);
+            return (users.length === 0 && permissions.length === 0);
+        } else {
+            throw new EntityNotFoundError(id);
+        }
+    }
+
+    public async bindRoleToPermission(role_id: string|number, permission_id: string|number): Promise<void> {
+        const entityRole = (typeof (role_id) === 'string') ?  await this.findOneBySlug(role_id) :   await this.findOne(role_id);
+        const entityPermission = (typeof (permission_id) === 'string') ?
+            await this.permissionService.findOneBySlug(permission_id) :
+            await this.permissionService.findOne(permission_id);
+        if (entityRole && entityPermission) {
+            if (!entityRole.permissions.find(perm => perm.slug === permission_id)) {
+                entityRole.permissions.push(entityPermission);
+                await this.roleRepository.save(entityRole);
+            }
+        } else {
+            throw new EntityNotFoundError(role_id + ' | ' + permission_id);
+        }
+    }
+    public async unbindRoleToPermission(role_id: string|number, permission_id: string|number): Promise<void> {
+        const entityRole = (typeof (role_id) === 'string') ?  await this.findOneBySlug(role_id) :   await this.findOne(role_id);
+        const entityPermission = (typeof (permission_id) === 'string') ?
+            await this.permissionService.findOneBySlug(permission_id) :
+            await this.permissionService.findOne(permission_id);
+        if (entityRole && entityPermission) {
+            if (entityRole.permissions.find(perm => perm.slug === permission_id)) {
+                entityRole.permissions = entityRole.permissions.filter(perm => perm.slug !== permission_id);
+                await this.roleRepository.save(entityRole);
+            }
+        } else {
+            throw new EntityNotFoundError(role_id + ' | ' + permission_id);
+        }
+    }
 }

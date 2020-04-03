@@ -57,13 +57,13 @@
       "supertest": "^3.0.0",
       "swagger-ui-express": "4.0.1",
       "ts-node": "7.0.1",
+      "tsconfig-paths": "^3.9.0",
       "tslint": "^5.8.0",
       "type-graphql": "^0.15.0",
       "typedi": "0.8.0",
       "typeorm": "^0.2.24",
       "typeorm-seeding": "^1.0.0-beta.6",
       "typeorm-typedi-extensions": "^0.2.1",
-      "typescript": "^3.6.3",
       "uuid": "^3.3.2",
       "winston": "3.1.0",
       "winston-daily-rotate-file": "^4.4.2"
@@ -87,6 +87,8 @@
    },
    "license": "MIT",
    "devDependencies": {
+      "@bahmutov/add-typescript-to-cypress": "^2.1.2",
+      "@bahmutov/cy-api": "^1.4.2",
       "@types/bcrypt": "^2.0.0",
       "@types/bluebird": "^3.5.18",
       "@types/chalk": "^2.2.0",
@@ -108,6 +110,7 @@
       "@types/uuid": "^3.4.3",
       "@types/winston": "^2.3.7",
       "cross-env": "^5.1.1",
+      "cypress": "^4.3.0",
       "jest": "23.6.0",
       "mock-express-request": "^0.2.0",
       "mock-express-response": "^0.2.1",
@@ -117,6 +120,7 @@
       "ts-jest": "23.10.1",
       "ts-node": "3.3.0",
       "typeorm-factory": "0.0.14",
-      "typescript": "3.3.3333"
+      "typescript": "^3.8.3",
+      "webpack": "^4.42.1"
    }
 }

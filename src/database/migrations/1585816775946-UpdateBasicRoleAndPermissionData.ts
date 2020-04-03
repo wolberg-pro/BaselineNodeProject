@@ -11,6 +11,7 @@ export class UpdateBasicRoleAndPermissionData1585816775946 implements MigrationI
         await queryRunner.query('INSERT INTO `permissions` (`slug`,`name`, `description`) VALUES\n' +
             '(\'admin_app\',\'Admin global permission\', \'global permission for admins of app\'),\n' +
             '(\'admin_user_control\',\'admin user control\', \'users with this permission can edit / delete outer users\'),\n' +
+            '(\'test_permission\',\'test permission\', \'Permission testing\'),\n' +
             '(\'member_app\',\'member Application\', \'global role for members of app\')'
         );
         await queryRunner.query('insert into `role_has_permission` (`role_id`,`permission_id`) VALUES ' +
@@ -29,6 +30,7 @@ export class UpdateBasicRoleAndPermissionData1585816775946 implements MigrationI
         await queryRunner.query('DELETE from `permissions` where slug in (' +
             '\'admin_app\',' +
             '\'admin_user_control\',' +
+            '\'test_permission\',' +
             '\'member_app\',' +
             ');');
     }

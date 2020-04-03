@@ -2,12 +2,12 @@ import {
     Authorized, Get, Put, JsonController, Param, QueryParams, Body
 } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
-import {GetUsersQuery} from './requests/query/DeletedQuery';
-import {Role} from '../models/Role';
-import {RoleService} from '../services/RoleService';
+import { GetUsersQuery } from './requests/query/DeletedQuery';
+import { Role } from '../models/Role';
+import { RoleService } from '../services/RoleService';
 import { UserService } from '../services/UserService';
-import {RoleOrPermissionResponse} from './responses/RoleOrPermissionResponse';
-import {BooleanResponse} from './responses/BooleanResponse';
+import { RoleOrPermissionResponse } from './responses/RoleOrPermissionResponse';
+import { BooleanResponse } from './responses/BooleanResponse';
 @Authorized()
 @JsonController('/roles')
 @OpenAPI({ security: [{ basicAuth: [] }] })
@@ -20,13 +20,13 @@ export class RolesController {
 
     @Get('/')
     @Authorized('admin_app')
-    @ResponseSchema(RoleOrPermissionResponse, {  description: 'get all roles' , isArray: true })
+    @ResponseSchema(RoleOrPermissionResponse, { description: 'get all roles', isArray: true })
     public index(@QueryParams() query: GetUsersQuery): Promise<Role[]> {
         return this.roleService.find(query.show_deleted);
     }
     @Get('/find/id/:id')
     @Authorized('admin_app')
-    @ResponseSchema(RoleOrPermissionResponse, {  description: 'look up for role by ID' })
+    @ResponseSchema(RoleOrPermissionResponse, { description: 'look up for role by ID' })
     public findById(@Param('id') id: number): Promise<Role> {
         return this.roleService.findOne(id);
     }
@@ -39,7 +39,7 @@ export class RolesController {
 
     @Put('/id/:id')
     @Authorized('admin_app')
-    @ResponseSchema(RoleOrPermissionResponse, {  description: 'update role by ID' })
+    @ResponseSchema(RoleOrPermissionResponse, { description: 'update role by ID' })
     public updateById(@Param('id') id: number, @Body() body: RoleOrPermissionResponse): Promise<Role> {
         return this.updateRole(id, body);
     }
@@ -58,7 +58,7 @@ export class RolesController {
         const resultResponse = new BooleanResponse();
         resultResponse.result = false;
         if (user && role) {
-            resultResponse.result = await this.roleService.userHasRole( user_id , slug );
+            resultResponse.result = await this.roleService.userHasRole(user_id, slug);
         }
         return resultResponse;
     }
@@ -68,7 +68,7 @@ export class RolesController {
      * @param body
      * @return Promise<Role>
      */
-    private updateRole(id: string|number, body: RoleOrPermissionResponse): Promise<Role> {
+    private updateRole(id: string | number, body: RoleOrPermissionResponse): Promise<Role> {
         return this.roleService.update(id, body);
     }
 

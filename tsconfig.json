@@ -36,6 +36,17 @@
             "es2015.symbol",
             "es2015.symbol.wellknown",
             "esnext.asynciterable"
-        ]
+        ],
+        "paths": {
+            "@src/*": [
+                "src/*"
+            ],
+            "@api/*": [
+                "src/api/*"
+            ],
+            "@test/*": [
+                "cypress/*"
+            ]
+        }
     }
 }

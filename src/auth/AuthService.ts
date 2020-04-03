@@ -6,6 +6,7 @@ import { Users } from '../api/models/Users';
 import { UserRepository } from '../api/repositories/UserRepository';
 import { Logger, LoggerInterface } from '../decorators/Logger';
 import {PermissionRepository} from '../api/repositories/PermissionRepository';
+import {RoleRepository} from '@api/repositories/RoleRepository';
 
 @Service()
 export class AuthService {
@@ -13,7 +14,8 @@ export class AuthService {
     constructor(
         @Logger(__filename) private log: LoggerInterface,
         @OrmRepository() private userRepository: UserRepository,
-        @OrmRepository() private permissionRepository: PermissionRepository
+        @OrmRepository() private permissionRepository: PermissionRepository,
+        @OrmRepository() private roleRepository: RoleRepository
     ) { }
 
     public parseBasicAuthFromRequest(req: express.Request): { username: string, password: string } {
@@ -50,9 +52,28 @@ export class AuthService {
         return undefined;
     }
 
+    /**
+     * will check if by giving slag (only) has the user has this permissions
+     * @param user_id
+     * @param permissionSlug array of slugs
+     * @return Promise<boolean>  the status if has matched
+     */
     public async validateUserPermission(user_id: number , permissionSlug: string[]): Promise<boolean> {
         if (permissionSlug.length === 0) {  return true; }
         const permissions = await this.permissionRepository.findByUsersByPermission(user_id , permissionSlug);
+        if (permissions  && permissions.length !== 0) { return true; }
+        return false;
+    }
+
+    /**
+     * will check if by giving slag (only) has the user has this role got the permissions
+     * @param user_id
+     * @param permissionSlug array of slugs
+     * @return Promise<boolean>  the status if has matched
+     */
+    public async validateUserRolePermission(user_id: number , permissionSlug: string[]): Promise<boolean> {
+        if (permissionSlug.length === 0) {  return true; }
+        const permissions = await this.roleRepository.findByUsersByPermission(user_id , permissionSlug);
         if (permissions  && permissions.length !== 0) { return true; }
         return false;
     }

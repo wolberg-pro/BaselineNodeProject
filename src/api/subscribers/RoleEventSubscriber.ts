@@ -1,8 +1,8 @@
 import { EventSubscriber, On } from 'event-dispatch';
 
 import { Logger } from '../../lib/logger';
-import { Users } from '../models/Users';
 import { events } from './events';
+import { Role } from '../models/Role';
 
 const log = new Logger(__filename);
 
@@ -10,12 +10,12 @@ const log = new Logger(__filename);
 export class RoleEventSubscriber {
 
     @On(events.role.created)
-    public onRoleCreate(user: Users): void {
-        log.info('Role ' + user.toString() + ' created!');
+    public onRoleCreate(entity: Role): void {
+        log.info('Role ' + entity.toString() + ' created!');
     }
     @On(events.role.updated)
-    public onRoleUpdate(user: Users): void {
-        log.info('Role ' + user.toString() + ' updated!');
+    public onRoleUpdate(entity: Role): void {
+        log.info('Role ' + entity.toString() + ' updated!');
     }
     @On(events.role.deleted)
     public onRoleDelete(entity_id: number): void {
