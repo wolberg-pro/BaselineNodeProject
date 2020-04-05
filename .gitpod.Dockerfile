@@ -50,16 +50,16 @@ RUN sudo echo "Running 'sudo' for Gitpod: success" && \
     # create .bashrc.d folder and source it in the bashrc
     mkdir /home/gitpod/.bashrc.d && \
     (echo; echo "for i in \$(ls \$HOME/.bashrc.d/*); do source \$i; done"; echo) >> /home/gitpod/.bashrc
-
+FROM gitpod/workspace-full:latest
 
 USER root
 
 # Install MySQL
 RUN apt-get update \
- && apt-get install -y mysql-server \
- && apt-get clean && rm -rf /var/cache/apt/* /var/lib/apt/lists/* /tmp/* \
- && mkdir /var/run/mysqld \
- && chown -R gitpod:gitpod /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade
+    && apt-get install -y mysql-server \
+    && apt-get clean && rm -rf /var/cache/apt/* /var/lib/apt/lists/* /tmp/* \
+    && mkdir /var/run/mysqld \
+    && chown -R gitpod:gitpod /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade
 
 # Install our own MySQL config
 COPY deployments/mysql/mysql.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
@@ -73,12 +73,10 @@ USER gitpod
 
 RUN echo "/etc/mysql/mysql-bashrc-launch.sh" >> ~/.bashrc
 
-
 ### Node.js ###
 LABEL dazzle/layer=lang-node
 LABEL dazzle/test=tests/lang-node.yaml
-USER gitpod
-ENV NODE_VERSION=12.16.1
+ENV NODE_VERSION=13.12.0
 RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | PROFILE=/dev/null bash \
     && bash -c ". .nvm/nvm.sh \
         && nvm install $NODE_VERSION \
@@ -94,8 +92,6 @@ ENV PATH=$PATH:/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin
 ### Python ###
 LABEL dazzle/layer=lang-python
 LABEL dazzle/test=tests/lang-python.yaml
-
-USER gitpod
 
 ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/shims:$PATH
 
@@ -122,20 +118,20 @@ USER root
 
 # Install Redis.
 RUN \
-  cd /tmp && \
-  wget http://download.redis.io/redis-stable.tar.gz && \
-  tar xvzf redis-stable.tar.gz && \
-  cd redis-stable && \
-  make && \
-  make install && \
-  cp -f src/redis-sentinel /usr/local/bin && \
-  mkdir -p /etc/redis && \
-  cp -f *.conf /etc/redis && \
-  rm -rf /tmp/redis-stable* && \
-  sed -i 's/^\(bind .*\)$/# \1/' /etc/redis/redis.conf && \
-  sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis/redis.conf && \
-  sed -i 's/^\(dir .*\)$/# \1\ndir \/data/' /etc/redis/redis.conf && \
-  sed -i 's/^\(logfile .*\)$/# \1/' /etc/redis/redis.conf
+    cd /tmp && \
+    wget http://download.redis.io/redis-stable.tar.gz && \
+    tar xvzf redis-stable.tar.gz && \
+    cd redis-stable && \
+    make && \
+    make install && \
+    cp -f src/redis-sentinel /usr/local/bin && \
+    mkdir -p /etc/redis && \
+    cp -f *.conf /etc/redis && \
+    rm -rf /tmp/redis-stable* && \
+    sed -i 's/^\(bind .*\)$/# \1/' /etc/redis/redis.conf && \
+    sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis/redis.conf && \
+    sed -i 's/^\(dir .*\)$/# \1\ndir \/data/' /etc/redis/redis.conf && \
+    sed -i 's/^\(logfile .*\)$/# \1/' /etc/redis/redis.conf
 
 # Define mountable directories.
 VOLUME ["/data"]
@@ -159,9 +155,9 @@ USER gitpod
 
 # Create work directory
 WORKDIR $HOME
-# Copy app source to work directory
+
 # Install app dependencies
-RUN npm install
+RUN yarn install
 
 # Build and run the app
 #CMD npm start serve

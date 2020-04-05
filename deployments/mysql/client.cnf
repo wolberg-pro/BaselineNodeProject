@@ -4,7 +4,7 @@ user     = root
 password = 4a72-9bfa-53
 socket   = /var/run/mysqld/mysqld.sock
 [mysql_upgrade]
-host     = localhost
+host     = %
 user     = root
 password = 4a72-9bfa-53
 socket   = /var/run/mysqld/mysqld.sock
