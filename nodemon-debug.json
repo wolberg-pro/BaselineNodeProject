@@ -1,0 +1,10 @@
+{
+    "delay": "0",
+    "execMap": {
+        "ts": "node  --inspect-brk -r ts-node/register -r tsconfig-paths/register "
+    },
+
+    "events": {
+        "start": "tslint -c ./tslint.json -t stylish 'src/**/*.ts'"
+    }
+}
