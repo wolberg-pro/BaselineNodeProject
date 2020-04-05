@@ -94,7 +94,7 @@ LABEL dazzle/layer=lang-python
 LABEL dazzle/test=tests/lang-python.yaml
 
 ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/shims:$PATH
-
+USER root
 RUN curl -fsSL https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash \
     && { echo; \
         echo 'eval "$(pyenv init -)"'; \
@@ -114,7 +114,7 @@ RUN curl -fsSL https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-ins
 # ENV PYTHONUSERBASE=/workspace/.pip-modules \
 #    PIP_USER=yes
 
-USER root
+
 
 # Install Redis.
 RUN \
