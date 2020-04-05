@@ -1,5 +1,4 @@
-
-FROM buildpack-deps:disco
+FROM gitpod/workspace-full:latest
 
 USER root
 
@@ -50,7 +49,7 @@ RUN sudo echo "Running 'sudo' for Gitpod: success" && \
     # create .bashrc.d folder and source it in the bashrc
     mkdir /home/gitpod/.bashrc.d && \
     (echo; echo "for i in \$(ls \$HOME/.bashrc.d/*); do source \$i; done"; echo) >> /home/gitpod/.bashrc
-FROM gitpod/workspace-full:latest
+
 
 USER root
 
@@ -94,7 +93,6 @@ LABEL dazzle/layer=lang-python
 LABEL dazzle/test=tests/lang-python.yaml
 
 ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/shims:$PATH
-USER root
 RUN curl -fsSL https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash \
     && { echo; \
         echo 'eval "$(pyenv init -)"'; \
@@ -115,6 +113,7 @@ RUN curl -fsSL https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-ins
 #    PIP_USER=yes
 
 
+USER root
 
 # Install Redis.
 RUN \
