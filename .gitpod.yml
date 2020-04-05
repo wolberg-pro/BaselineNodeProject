@@ -15,8 +15,9 @@ ports:
     onOpen: ignore
 # List the start up tasks. You can start them in parallel in multiple terminals. See https://www.gitpod.io/docs/config-start-tasks/
 tasks:
-  - init: npm start setup # runs during prebuild
-    command: echo 'npm start serve'
+  - init: yarn install # runs during prebuild
+    command: yarn start setup
+    command: echo 'yarn start serve'
 
 vscode:
   extensions:
