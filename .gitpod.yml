@@ -7,13 +7,35 @@ ports:
     onOpen: ignore
   - port: 9229
     onOpen: ignore
-    # mysql port
+# mysql port
   - port: 3306
     onOpen: ignore
-    #redis port
+#redis port
   - port: 6379
     onOpen: ignore
 # List the start up tasks. You can start them in parallel in multiple terminals. See https://www.gitpod.io/docs/config-start-tasks/
 tasks:
   - init: npm start setup # runs during prebuild
     command: echo 'npm start serve'
+
+vscode:
+  extensions:
+    - formulahendry.vscode-mysql@0.4.0:ozffYq4AkDKzFalv61HFIw==
+    - mikestead.dotenv@1.0.1:SSXjr5hZcbqSF7nMIhTNnA==
+    - leizongmin.node-module-intellisense@1.5.0:l5gZ4eB82kEQ+FF7GzPJew==
+    - christian-kohler.path-intellisense@1.4.2:QnOrf5fk6KiVaQs4cNEP+w==
+    - CoenraadS.bracket-pair-colorizer-2@0.0.29:Y00hDi6uxq/5AWl637owFQ==
+    - ms-vscode-remote.remote-ssh@0.51.0:3NIkyB2d2HhbMGULYDnsaA==
+    - sleistner.vscode-fileutils@3.0.1:z8IOIjJJXH4lAgoLexBPxQ==
+    - christian-kohler.npm-intellisense@1.3.0:yQtCdwoyo890Bn9NOEuEDA==
+    - esbenp.prettier-vscode@4.0.0:xsAq4L0PbQlPoZEL0/LFMA==
+    - eamodio.gitlens@10.2.1:e0IYyp0efFqVsrZwsIe8CA==
+    - codezombiech.gitignore@0.6.0:oJP0UqwrXt2Qgt5QRm1BIQ==
+    - VisualStudioExptTeam.vscodeintellicode@1.2.6:Gl+8u7mnb+vYq2Ruvcx9/Q==
+    - moshfeu.compare-folders@0.8.0:9/wAzwRrJrtyhTMT2dS0og==
+    - redhat.vscode-yaml@0.7.2:bHhi0sG8mPlN+HpfBDsjQw==
+    - ms-vscode.vscode-typescript-next@3.9.20200404:IU20rD4isW0eIt0grF3N9Q==
+    - liximomo.sftp@1.12.9:xo64yO73ejmtN7H5cXdJNw==
+    - streetsidesoftware.code-spell-checker@1.8.0:pOcw5Mko+D583rMKG2b1PQ==
+    - oderwat.indent-rainbow@7.4.0:nth8lnJRnQu9NcWvNc9KPA==
+    - steoates.autoimport@1.5.3:ssEPucpXsRjqSbJX1bW0YA==
