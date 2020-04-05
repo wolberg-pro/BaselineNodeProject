@@ -61,12 +61,5 @@ EXPOSE 3000
 
 USER gitpod
 
-# Create work directory
 WORKDIR $HOME
 
-
-# Install app dependencies
-RUN yarn install
-
-# Build and run the app
-#CMD npm start serve
